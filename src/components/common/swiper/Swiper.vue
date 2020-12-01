@@ -187,6 +187,7 @@
   #hy-swiper {
     overflow: hidden;
     position: relative;
+    margin-top: 44px;
   }
   .swiper {
     display: flex;
