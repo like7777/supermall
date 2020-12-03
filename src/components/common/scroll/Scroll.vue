@@ -33,7 +33,7 @@
         click: true,
         probeType: this.probeType,
         pullUpLoad: true,
-        
+        mouseWheel: true
       })
 
       // 2.监听滚动的位置

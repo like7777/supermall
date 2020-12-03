@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="ItemClick">    
-      <img :src="goodsItem.show.img" alt="">   
+      <img :src="showImage" alt="">   
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
         <span class="price">{{goodsItem.price}}</span>
@@ -20,6 +20,11 @@
         }
       }
     },
+    computed:{
+      showImage(){
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
     methods:{
       ItemClick(){
         this.$router.push('/detail/' + this.goodsItem.iid)
@@ -30,7 +35,7 @@
 
 <style>
   .goods-item {
-    padding-bottom: 40px;
+    
     position: relative;
     width: 48%;
   }
@@ -40,8 +45,8 @@
   }
   .goods-info {
     font-size: 12px;
-    position: absolute;
-    bottom: 5px;
+    position: relative;
+    
     left: 0;
     right: 0;
     overflow: hidden;

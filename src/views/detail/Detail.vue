@@ -1,25 +1,35 @@
 <template>
   <div class="detail">
-    <detail-nav-bar class="detail-nav"/>
+    <detail-nav-bar class="detail-nav" @titleClick="titlesClick" ref="nav"/>
+    <ul>
+    	<li v-for="item in $store.state.cartList">{{item}}</li>
+    </ul>
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop :shop="shop"/>
-      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad()"/>
-      <detail-param-info :param-info="paramInfo"/>
+      <detail-goods-info  :detail-info="detailInfo" @imageLoad="imageLoad"/>
+      <detail-param-info ref='params' :param-info="paramInfo"/>
+      <detail-commengt-info ref='commengt' :commengt-info="commentInfo"/>
+      <goods-list ref='recommend' :goods="recommend"/>
     </scroll>
+    <detail-bottom-bar  @addCart="addToCart"/>
   </div>
 </template>
 
 <script>
   import DetailNavBar from './ChildComps/DetailNavBar'
-  import {getdetail, Goods, Shop, GoodsParam} from '../../network/detail'
+  import {getdetail, Goods, Shop, GoodsParam, getRecommend} from '../../network/detail'
   import DetailSwiper from './ChildComps/DetailSwiper'
   import DetailBaseInfo from './ChildComps/DetailBaseInfo'
   import DetailShop from './ChildComps/DetailShop'
   import Scroll from '../../components/common/scroll/Scroll'
   import DetailGoodsInfo from './ChildComps/DetailGoodsInfo'
   import DetailParamInfo from './ChildComps/DetailParamInfo'
+  import DetailCommengtInfo from './ChildComps/DetailCommengtInfo'
+  import GoodsList from '../../components/content/goods/GoodsList'
+  import {deBounce} from '../../common/utils.js'
+  import DetailBottomBar from './ChildComps/DetailBottomBar.vue'
   
   export default {
     name:'Detail',
@@ -30,7 +40,10 @@
       DetailShop,
       Scroll,
       DetailGoodsInfo,
-      DetailParamInfo
+      DetailParamInfo,
+      DetailCommengtInfo,
+      GoodsList,
+      DetailBottomBar
     },
     data(){
       return{
@@ -39,7 +52,10 @@
         goods : {},
         shop : {},
         detailInfo : {},
-        paramInfo : {}
+        paramInfo : {},
+        commentInfo : {},
+        recommend : [],
+        themeTopYs : null
       }
     },
     created(){
@@ -58,14 +74,52 @@
         //详情
         this.detailInfo = data.detailInfo
         //参数
-        this.ParamInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+        this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+        //评论
+        if(data.rate.cRate !== 0) {
+          this.commentInfo = data.rate.list[0]
+        }
+      }),
+      //请求推荐数据
+      getRecommend().then(res => {
+        console.log(res)
+        this.recommend = res.data.list
       })
+      //存值 getThemeTop
+      this.getThemeTopY = deBounce(() => {
+        console.log(111)
+       this.themeTopYs = []
+       this.themeTopYs.push(0);
+       this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+       this.themeTopYs.push(this.$refs.commengt.$el.offsetTop);
+       this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+       
+        
+      },100 )
     },
     methods: {
       imageLoad(){
         this.$refs.scroll.refresh()
+        this.themeTopYs()
+      },
+      titlesClick(index) {
+        
+        this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100)
+      },
+      addToCart(){
+        console.log(1111111)
+        //获取信息
+        const product = {}
+        product.image = this.topImages[0];
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.newPrice;
+        product.iid = this.iid
+        //加入购物车
+        this.$store.commit('addCart', product)
       }
-    }
+    },
+    
   }
 </script>
 
@@ -76,7 +130,7 @@
     background-color: #fff;
     height: 100vh;
   }
-  .nnn {
+  .detail-nav {
     position: relative;
     z-index: 12;
     background-color: #fff;
