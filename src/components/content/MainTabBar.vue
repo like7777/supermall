@@ -10,7 +10,7 @@
         <img slot="item-icon" src="~assets/img/分类.png" alt="">
         <div slot="item-text">分类</div>
       </tab-bar-item>
-      <tab-bar-item path="cart">
+      <tab-bar-item path="cart" >
         <img slot="item-icon" src="~assets/img/购物车.png" alt="">
         <div slot="item-text">购物车</div>
       </tab-bar-item>

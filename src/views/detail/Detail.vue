@@ -1,9 +1,7 @@
 <template>
   <div class="detail">
     <detail-nav-bar class="detail-nav" @titleClick="titlesClick" ref="nav"/>
-    <ul>
-    	<li v-for="item in $store.state.cartList">{{item}}</li>
-    </ul>
+    
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
@@ -99,22 +97,23 @@
     },
     methods: {
       imageLoad(){
-        this.$refs.scroll.refresh()
-        this.themeTopYs()
+        
+        
       },
       titlesClick(index) {
         
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100)
       },
       addToCart(){
-        console.log(1111111)
+        console.log('加入购物车')
         //获取信息
         const product = {}
-        product.image = this.topImages[0];
+        product.image ='https:' + this.topImages[0];
         product.title = this.goods.title;
         product.desc = this.goods.desc;
-        product.price = this.goods.newPrice;
+        product.price = this.goods.realPrice;
         product.iid = this.iid
+        console.log(product.image)
         //加入购物车
         this.$store.commit('addCart', product)
       }
