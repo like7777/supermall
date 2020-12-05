@@ -25,7 +25,9 @@ export default {
     Scroll,
     CartListItem
   },
-  methods: {},
+  methods: {
+    
+  },
   activated() {
     this.$refs.scroll.refresh();
   }

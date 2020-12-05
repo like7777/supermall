@@ -1,6 +1,6 @@
 <template>
-  <div class="goods" >
-    <goods-list-item v-for="item in goods" :goods-item="item"/>
+  <div class="goods"  @click="ItemClick()">
+    <goods-list-item v-for="item in goods" :goods-item="item" />
   </div>
 </template>
 
@@ -11,6 +11,12 @@
     name:'GoodsList',
     components:{
       GoodsListItem
+    },
+    methods:{
+      ItemClick(){
+        // this.$router.push('/detail/' + this.goods.item_id)
+        console.log(this)
+      }
     },
     props:{
       goods:{

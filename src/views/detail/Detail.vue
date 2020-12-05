@@ -11,7 +11,7 @@
       <detail-commengt-info ref='commengt' :commengt-info="commentInfo"/>
       <goods-list ref='recommend' :goods="recommend"/>
     </scroll>
-    <detail-bottom-bar  @addCart="addToCart"/>
+    <detail-bottom-bar  @addCart="addToCart" @service="service" @store="store" @collection="collection" @buy="buy" />
   </div>
 </template>
 
@@ -98,6 +98,8 @@
     methods: {
       imageLoad(){
         
+          this.$refs.scroll.refresh();
+       
         
       },
       titlesClick(index) {
@@ -116,7 +118,20 @@
         console.log(product.image)
         //加入购物车
         this.$store.commit('addCart', product)
-      }
+      },
+      service(){
+        console.log('点击了客服')
+      },
+      store(){
+        console.log('点击了店铺')
+      },
+      collection(){
+        console.log('点击了收藏')
+      },
+      buy(){
+        console.log('点击了购买')
+      },
+      
     },
     
   }
